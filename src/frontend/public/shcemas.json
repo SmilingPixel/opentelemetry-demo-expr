@@ -1,0 +1,244 @@
+{
+  "components": {
+    "schemas": {
+      "Money": {
+        "type": "object",
+        "properties": {
+          "currencyCode": {
+            "type": "string"
+          },
+          "units": {
+            "type": "integer"
+          },
+          "nanos": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "currencyCode",
+          "units",
+          "nanos"
+        ]
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string"
+          },
+          "priceUsd": {
+            "$ref": "#/components/schemas/Money"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "picture",
+          "priceUsd"
+        ]
+      },
+      "Ad": {
+        "type": "object",
+        "properties": {
+          "redirectUrl": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "redirectUrl",
+          "text"
+        ]
+      },
+      "PlaceOrderRequest": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "userCurrency": {
+            "type": "string"
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "email": {
+            "type": "string"
+          },
+          "creditCard": {
+            "$ref": "#/components/schemas/CreditCardInfo"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CartItem"
+            }
+          }
+        },
+        "required": [
+          "userId",
+          "userCurrency",
+          "address",
+          "email",
+          "creditCard",
+          "items"
+        ]
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string"
+          },
+          "shippingTrackingId": {
+            "type": "string"
+          },
+          "shippingCost": {
+            "$ref": "#/components/schemas/Money"
+          },
+          "shippingAddress": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
+            }
+          }
+        },
+        "required": [
+          "orderId",
+          "shippingTrackingId",
+          "shippingCost",
+          "shippingAddress",
+          "items"
+        ]
+      },
+      "Cart": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CartItem"
+            }
+          }
+        },
+        "required": [
+          "userId",
+          "items"
+        ]
+      },
+      "AddItemRequest": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "item": {
+            "$ref": "#/components/schemas/CartItem"
+          }
+        },
+        "required": [
+          "userId",
+          "item"
+        ]
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "streetAddress": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "streetAddress",
+          "city",
+          "state",
+          "country",
+          "zipCode"
+        ]
+      },
+      "CreditCardInfo": {
+        "type": "object",
+        "properties": {
+          "creditCardNumber": {
+            "type": "string"
+          },
+          "creditCardCvv": {
+            "type": "string"
+          },
+          "creditCardExpirationYear": {
+            "type": "integer"
+          },
+          "creditCardExpirationMonth": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "creditCardNumber",
+          "creditCardCvv",
+          "creditCardExpirationYear",
+          "creditCardExpirationMonth"
+        ]
+      },
+      "CartItem": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "productId",
+          "quantity"
+        ]
+      },
+      "OrderItem": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "$ref": "#/components/schemas/CartItem"
+          },
+          "cost": {
+            "$ref": "#/components/schemas/Money"
+          }
+        },
+        "required": [
+          "item",
+          "cost"
+        ]
+      }
+    }
+  }
+}

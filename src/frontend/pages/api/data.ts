@@ -8,6 +8,32 @@ import { Ad, Empty } from '../../protos/demo';
 
 type TResponse = Ad[] | Empty;
 
+/**
+ * @swagger
+ * /api/data:
+ *   get:
+ *     summary: Retrieve a list of ads
+ *     description: Fetches a list of ads based on the provided context keys.
+ *     parameters:
+ *       - in: query
+ *         name: contextKeys
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *         description: List of context keys describing the context.
+ *     responses:
+ *       200:
+ *         description: A list of ads
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Ad'
+ *       405:
+ *         description: Method not allowed
+ */
 const handler = async ({ method, query }: NextApiRequest, res: NextApiResponse<TResponse>) => {
   switch (method) {
     case 'GET': {

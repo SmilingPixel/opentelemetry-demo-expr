@@ -1,0 +1,618 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "NextJS Swagger",
+        "version": "0.1.0"
+    },
+    "host": "localhost:3000",
+    "paths": {
+        "/api/cart": {
+            "get": {
+                "summary": "Retrieve the cart",
+                "description": "Fetches the cart details for a given session.",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "sessionId",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The session ID for the cart."
+                    },
+                    {
+                        "in": "query",
+                        "name": "currencyCode",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The currency code for the cart items."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The cart details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Cart"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method not allowed"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Add an item to the cart",
+                "description": "Adds an item to the cart.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddItemRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The updated cart details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Cart"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method not allowed"
+                    }
+                }
+            }
+        },
+        "/api/checkout": {
+            "post": {
+                "summary": "Place an order",
+                "description": "Places an order and returns the order details.",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "currencyCode",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The currency code for the order."
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PlaceOrderRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The order details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "order": {
+                                            "$ref": "#/components/schemas/Order"
+                                        },
+                                        "items": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/IProductCheckoutItem"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method not allowed"
+                    }
+                }
+            }
+        },
+        "/api/currency": {
+            "get": {
+                "summary": "Retrieve a list of supported currencies",
+                "description": "Fetches a list of supported currency codes.",
+                "responses": {
+                    "200": {
+                        "description": "A list of supported currency codes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method not allowed"
+                    }
+                }
+            }
+        },
+        "/api/data": {
+            "get": {
+                "summary": "Retrieve a list of ads",
+                "description": "Fetches a list of ads based on the provided context keys.",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "contextKeys",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "description": "List of context keys describing the context."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of ads",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Ad"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method not allowed"
+                    }
+                }
+            }
+        },
+        "/api/hello": {
+            "get": {
+                "description": "Returns the hello world",
+                "responses": {
+                    "200": {
+                        "description": "hello world"
+                    }
+                }
+            }
+        },
+        "/api/products/{productId}": {
+            "get": {
+                "summary": "Retrieve a product by ID",
+                "description": "Fetches a product by its ID.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "productId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The ID of the product to retrieve."
+                    },
+                    {
+                        "in": "query",
+                        "name": "currencyCode",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The currency code for the product price."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The product details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method not allowed"
+                    }
+                }
+            }
+        },
+        "/api/products": {
+            "get": {
+                "summary": "Retrieve a list of products",
+                "description": "Fetches a list of products available in the catalog.",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "currencyCode",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The currency code for the product prices."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of products",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Product"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method not allowed"
+                    }
+                }
+            }
+        },
+        "/api/recommendations": {
+            "get": {
+                "summary": "Retrieve product recommendations",
+                "description": "Fetches a list of recommended products based on the provided product IDs and session ID.",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "productIds",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "description": "List of product IDs to base recommendations on."
+                    },
+                    {
+                        "in": "query",
+                        "name": "sessionId",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The session ID for the recommendations."
+                    },
+                    {
+                        "in": "query",
+                        "name": "currencyCode",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The currency code for the recommended products."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of recommended products",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Product"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method not allowed"
+                    }
+                }
+            }
+        },
+        "/api/shipping": {
+            "get": {
+                "summary": "Retrieve shipping cost",
+                "description": "Fetches the shipping cost for the given cart items and address.",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "itemList",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "JSON stringified list of cart items."
+                    },
+                    {
+                        "in": "query",
+                        "name": "currencyCode",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The currency code for the shipping cost."
+                    },
+                    {
+                        "in": "query",
+                        "name": "address",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "JSON stringified address object."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The shipping cost",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Money"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Method not allowed"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Money": {
+                "type": "object",
+                "properties": {
+                    "currencyCode": {
+                        "type": "string"
+                    },
+                    "units": {
+                        "type": "integer"
+                    },
+                    "nanos": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "currencyCode",
+                    "units",
+                    "nanos"
+                ]
+            },
+            "Product": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "picture": {
+                        "type": "string"
+                    },
+                    "priceUsd": {
+                        "$ref": "#/components/schemas/Money"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "description",
+                    "picture",
+                    "priceUsd"
+                ]
+            },
+            "Ad": {
+                "type": "object",
+                "properties": {
+                    "redirectUrl": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "redirectUrl",
+                    "text"
+                ]
+            },
+            "PlaceOrderRequest": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string"
+                    },
+                    "userCurrency": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "$ref": "#/components/schemas/Address"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "creditCard": {
+                        "$ref": "#/components/schemas/CreditCardInfo"
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CartItem"
+                        }
+                    }
+                },
+                "required": [
+                    "userId",
+                    "userCurrency",
+                    "address",
+                    "email",
+                    "creditCard",
+                    "items"
+                ]
+            },
+            "Order": {
+                "type": "object",
+                "properties": {
+                    "orderId": {
+                        "type": "string"
+                    },
+                    "shippingTrackingId": {
+                        "type": "string"
+                    },
+                    "shippingCost": {
+                        "$ref": "#/components/schemas/Money"
+                    },
+                    "shippingAddress": {
+                        "$ref": "#/components/schemas/Address"
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    }
+                },
+                "required": [
+                    "orderId",
+                    "shippingTrackingId",
+                    "shippingCost",
+                    "shippingAddress",
+                    "items"
+                ]
+            },
+            "Cart": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string"
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CartItem"
+                        }
+                    }
+                },
+                "required": [
+                    "userId",
+                    "items"
+                ]
+            },
+            "AddItemRequest": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string"
+                    },
+                    "item": {
+                        "$ref": "#/components/schemas/CartItem"
+                    }
+                },
+                "required": [
+                    "userId",
+                    "item"
+                ]
+            },
+            "Address": {
+                "type": "object",
+                "properties": {
+                    "streetAddress": {
+                        "type": "string"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string"
+                    },
+                    "zipCode": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "streetAddress",
+                    "city",
+                    "state",
+                    "country",
+                    "zipCode"
+                ]
+            },
+            "CreditCardInfo": {
+                "type": "object",
+                "properties": {
+                    "creditCardNumber": {
+                        "type": "string"
+                    },
+                    "creditCardCvv": {
+                        "type": "string"
+                    },
+                    "creditCardExpirationYear": {
+                        "type": "integer"
+                    },
+                    "creditCardExpirationMonth": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "creditCardNumber",
+                    "creditCardCvv",
+                    "creditCardExpirationYear",
+                    "creditCardExpirationMonth"
+                ]
+            },
+            "CartItem": {
+                "type": "object",
+                "properties": {
+                    "productId": {
+                        "type": "string"
+                    },
+                    "quantity": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "productId",
+                    "quantity"
+                ]
+            },
+            "OrderItem": {
+                "type": "object",
+                "properties": {
+                    "item": {
+                        "$ref": "#/components/schemas/CartItem"
+                    },
+                    "cost": {
+                        "$ref": "#/components/schemas/Money"
+                    }
+                },
+                "required": [
+                    "item",
+                    "cost"
+                ]
+            }
+        }
+    },
+    "tags": []
+}

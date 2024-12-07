@@ -10,6 +10,41 @@ import ProductCatalogService from '../../services/ProductCatalog.service';
 
 type TResponse = IProductCheckout | Empty;
 
+/**
+ * @swagger
+ * /api/checkout:
+ *   post:
+ *     summary: Place an order
+ *     description: Places an order and returns the order details.
+ *     parameters:
+ *       - in: query
+ *         name: currencyCode
+ *         schema:
+ *           type: string
+ *         description: The currency code for the order.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PlaceOrderRequest'
+ *     responses:
+ *       200:
+ *         description: The order details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 order:
+ *                   $ref: '#/components/schemas/Order'
+ *                 items:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/IProductCheckoutItem'
+ *       405:
+ *         description: Method not allowed
+ */
 const handler = async ({ method, body, query }: NextApiRequest, res: NextApiResponse<TResponse>) => {
   switch (method) {
     case 'POST': {

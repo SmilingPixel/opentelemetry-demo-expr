@@ -8,6 +8,24 @@ import { Empty } from '../../protos/demo';
 
 type TResponse = string[] | Empty;
 
+/**
+ * @swagger
+ * /api/currency:
+ *   get:
+ *     summary: Retrieve a list of supported currencies
+ *     description: Fetches a list of supported currency codes.
+ *     responses:
+ *       200:
+ *         description: A list of supported currency codes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *       405:
+ *         description: Method not allowed
+ */
 const handler = async ({ method }: NextApiRequest, res: NextApiResponse<TResponse>) => {
   switch (method) {
     case 'GET': {
