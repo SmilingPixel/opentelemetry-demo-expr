@@ -112,7 +112,7 @@
                                         "items": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/IProductCheckoutItem"
+                                                "$ref": "#/components/schemas/ProductCheckoutItem"
                                             }
                                         }
                                     }
@@ -183,16 +183,6 @@
                     },
                     "405": {
                         "description": "Method not allowed"
-                    }
-                }
-            }
-        },
-        "/api/hello": {
-            "get": {
-                "description": "Returns the hello world",
-                "responses": {
-                    "200": {
-                        "description": "hello world"
                     }
                 }
             }
@@ -610,6 +600,24 @@
                 "required": [
                     "item",
                     "cost"
+                ]
+            },
+            "ProductCheckoutItem": {
+                "type": "object",
+                "properties": {
+                    "productId": {
+                        "type": "string"
+                    },
+                    "product": {
+                        "$ref": "#/components/schemas/Product"
+                    },
+                    "quantity": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "product",
+                    "quantity"
                 ]
             }
         }
