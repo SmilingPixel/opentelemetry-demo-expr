@@ -1,0 +1,1 @@
+minikube start --cpus 16 --memory 24GB --disk-size 32GB
