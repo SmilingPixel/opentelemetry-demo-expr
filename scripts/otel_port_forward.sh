@@ -1,0 +1,1 @@
+kubectl port-forward svc/opentelemetry-demo -frontendproxy 18080:8080 --address 0.0.0.0
