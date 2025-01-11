@@ -1,0 +1,87 @@
+openapi: 3.0.0
+info:
+  title: EmailService API
+  version: 1.0.0
+  description: REST API representation of the EmailService gRPC service.
+servers:
+  - url: https://api.example.com
+paths:
+  /email/sendOrderConfirmation:
+    post:
+      summary: Send order confirmation email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendOrderConfirmationRequest'
+      responses:
+        '200':
+          description: Order confirmation email sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+components:
+  schemas:
+    Money:
+      type: object
+      properties:
+        currency_code:
+          type: string
+        units:
+          type: integer
+        nanos:
+          type: integer
+    CartItem:
+      type: object
+      properties:
+        product_id:
+          type: string
+        quantity:
+          type: integer
+    Address:
+      type: object
+      properties:
+        street_address:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        zip_code:
+          type: string
+    OrderItem:
+      type: object
+      properties:
+        item:
+          $ref: '#/components/schemas/CartItem'
+        cost:
+          $ref: '#/components/schemas/Money'
+    OrderResult:
+      type: object
+      properties:
+        order_id:
+          type: string
+        shipping_tracking_id:
+          type: string
+        shipping_cost:
+          $ref: '#/components/schemas/Money'
+        shipping_address:
+          $ref: '#/components/schemas/Address'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+    SendOrderConfirmationRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        order:
+          $ref: '#/components/schemas/OrderResult'
+    Empty:
+      type: object
+      description: An empty response

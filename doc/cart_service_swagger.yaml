@@ -1,0 +1,95 @@
+openapi: 3.0.0
+info:
+  title: CartService API
+  version: 1.0.0
+  description: REST API representation of the CartService gRPC service.
+servers:
+  - url: https://api.example.com
+paths:
+  /cart/add:
+    post:
+      summary: Add an item to the cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddItemRequest'
+      responses:
+        '200':
+          description: Item added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+  /cart/{user_id}:
+    get:
+      summary: Get the cart for a user
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cart retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+  /cart/empty:
+    post:
+      summary: Empty the cart for a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmptyCartRequest'
+      responses:
+        '200':
+          description: Cart emptied successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+components:
+  schemas:
+    CartItem:
+      type: object
+      properties:
+        product_id:
+          type: string
+        quantity:
+          type: integer
+    AddItemRequest:
+      type: object
+      properties:
+        user_id:
+          type: string
+        item:
+          $ref: '#/components/schemas/CartItem'
+    EmptyCartRequest:
+      type: object
+      properties:
+        user_id:
+          type: string
+    GetCartRequest:
+      type: object
+      properties:
+        user_id:
+          type: string
+    Cart:
+      type: object
+      properties:
+        user_id:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItem'
+    Empty:
+      type: object
+      description: An empty response
+      

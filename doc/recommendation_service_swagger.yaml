@@ -1,0 +1,50 @@
+openapi: 3.0.0
+info:
+  title: RecommendationService API
+  version: 1.0.0
+  description: REST API representation of the RecommendationService gRPC service.
+servers:
+  - url: https://api.example.com
+paths:
+  /recommendations:
+    get:
+      summary: List product recommendations for a user
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: product_ids
+          in: query
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Recommendations retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListRecommendationsResponse'
+components:
+  schemas:
+    ListRecommendationsRequest:
+      type: object
+      properties:
+        user_id:
+          type: string
+        product_ids:
+          type: array
+          items:
+            type: string
+    ListRecommendationsResponse:
+      type: object
+      properties:
+        product_ids:
+          type: array
+          items:
+            type: string
+            

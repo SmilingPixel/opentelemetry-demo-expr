@@ -1,0 +1,59 @@
+openapi: 3.0.0
+info:
+  title: CurrencyService API
+  version: 1.0.0
+  description: REST API representation of the CurrencyService gRPC service.
+servers:
+  - url: https://api.example.com
+paths:
+  /currency/supported:
+    get:
+      summary: Get supported currencies
+      responses:
+        '200':
+          description: Supported currencies retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSupportedCurrenciesResponse'
+  /currency/convert:
+    post:
+      summary: Convert currency
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CurrencyConversionRequest'
+      responses:
+        '200':
+          description: Currency converted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Money'
+components:
+  schemas:
+    Money:
+      type: object
+      properties:
+        currency_code:
+          type: string
+        units:
+          type: integer
+        nanos:
+          type: integer
+    GetSupportedCurrenciesResponse:
+      type: object
+      properties:
+        currency_codes:
+          type: array
+          items:
+            type: string
+    CurrencyConversionRequest:
+      type: object
+      properties:
+        from:
+          $ref: '#/components/schemas/Money'
+        to_code:
+          type: string
