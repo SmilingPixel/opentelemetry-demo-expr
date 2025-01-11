@@ -1,0 +1,106 @@
+openapi: 3.0.0
+info:
+  title: ProductCatalogService API
+  version: 1.0.0
+  description: REST API representation of the ProductCatalogService gRPC service.
+servers:
+  - url: https://api.example.com
+paths:
+  /products:
+    get:
+      summary: List all products
+      responses:
+        '200':
+          description: Products retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListProductsResponse'
+  /products/{id}:
+    get:
+      summary: Get a product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Product retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+  /products/search:
+    get:
+      summary: Search for products
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Search results retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchProductsResponse'
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        picture:
+          type: string
+        price_usd:
+          $ref: '#/components/schemas/Money'
+        categories:
+          type: array
+          items:
+            type: string
+    ListProductsResponse:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    GetProductRequest:
+      type: object
+      properties:
+        id:
+          type: string
+    SearchProductsRequest:
+      type: object
+      properties:
+        query:
+          type: string
+    SearchProductsResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+    Money:
+      type: object
+      properties:
+        currency_code:
+          type: string
+        units:
+          type: integer
+        nanos:
+          type: integer
+    Empty:
+      type: object
+      description: An empty response
+      

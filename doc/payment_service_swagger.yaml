@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+  title: PaymentService API
+  version: 1.0.0
+  description: REST API representation of the PaymentService gRPC service.
+servers:
+  - url: https://api.example.com
+paths:
+  /payment/charge:
+    post:
+      summary: Charge a payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChargeRequest'
+      responses:
+        '200':
+          description: Payment charged successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargeResponse'
+components:
+  schemas:
+    Money:
+      type: object
+      properties:
+        currency_code:
+          type: string
+        units:
+          type: integer
+        nanos:
+          type: integer
+    CreditCardInfo:
+      type: object
+      properties:
+        credit_card_number:
+          type: string
+        credit_card_cvv:
+          type: integer
+        credit_card_expiration_year:
+          type: integer
+        credit_card_expiration_month:
+          type: integer
+    ChargeRequest:
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Money'
+        credit_card:
+          $ref: '#/components/schemas/CreditCardInfo'
+    ChargeResponse:
+      type: object
+      properties:
+        transaction_id:
+          type: string

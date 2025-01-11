@@ -1,0 +1,143 @@
+openapi: 3.0.0
+info:
+  title: FeatureFlagService API
+  version: 1.0.0
+  description: REST API representation of the FeatureFlagService gRPC service.
+servers:
+  - url: https://api.example.com
+paths:
+  /featureflag/get:
+    get:
+      summary: Get a feature flag by name
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Feature flag retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFlagResponse'
+  /featureflag/create:
+    post:
+      summary: Create a new feature flag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFlagRequest'
+      responses:
+        '200':
+          description: Feature flag created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateFlagResponse'
+  /featureflag/update:
+    put:
+      summary: Update an existing feature flag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFlagRequest'
+      responses:
+        '200':
+          description: Feature flag updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateFlagResponse'
+  /featureflag/list:
+    get:
+      summary: List all feature flags
+      responses:
+        '200':
+          description: Feature flags listed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListFlagsResponse'
+  /featureflag/delete:
+    delete:
+      summary: Delete a feature flag by name
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Feature flag deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteFlagResponse'
+components:
+  schemas:
+    Flag:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        enabled:
+          type: boolean
+    GetFlagRequest:
+      type: object
+      properties:
+        name:
+          type: string
+    GetFlagResponse:
+      type: object
+      properties:
+        flag:
+          $ref: '#/components/schemas/Flag'
+    CreateFlagRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        enabled:
+          type: boolean
+    CreateFlagResponse:
+      type: object
+      properties:
+        flag:
+          $ref: '#/components/schemas/Flag'
+    UpdateFlagRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        enabled:
+          type: boolean
+    UpdateFlagResponse:
+      type: object
+    ListFlagsRequest:
+      type: object
+    ListFlagsResponse:
+      type: object
+      properties:
+        flags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Flag'
+    DeleteFlagRequest:
+      type: object
+      properties:
+        name:
+          type: string
+    DeleteFlagResponse:
+      type: object
+      

@@ -1,0 +1,50 @@
+openapi: 3.0.0
+info:
+  title: AdService API
+  version: 1.0.0
+  description: REST API representation of the AdService gRPC service.
+servers:
+  - url: https://api.example.com
+paths:
+  /ads:
+    get:
+      summary: Get advertisements based on context keys
+      parameters:
+        - name: context_keys
+          in: query
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Ads retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdResponse'
+components:
+  schemas:
+    Ad:
+      type: object
+      properties:
+        redirect_url:
+          type: string
+        text:
+          type: string
+    AdRequest:
+      type: object
+      properties:
+        context_keys:
+          type: array
+          items:
+            type: string
+    AdResponse:
+      type: object
+      properties:
+        ads:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ad'
+            
