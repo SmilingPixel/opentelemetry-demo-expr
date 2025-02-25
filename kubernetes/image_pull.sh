@@ -7,4 +7,7 @@ while IFS= read -r image; do
     
     # Load the image into Minikube
     minikube image load "$image"
+
+    # echo the image name
+    echo "Image $image loaded into Minikube"
 done < image_list.txt

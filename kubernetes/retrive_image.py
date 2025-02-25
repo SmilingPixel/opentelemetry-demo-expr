@@ -7,7 +7,7 @@ def get_images_from_yaml(file_path):
         return images
 
 def main():
-    file_path = 'opentelemetry-demo-copy.yaml'  # Replace with your YAML file path
+    file_path = 'opentelemetry-demo-copy-2.yaml'  # Replace with your YAML file path
     images = get_images_from_yaml(file_path)
     # remove `""` and deduplicate
     images = list(sorted(set([re.sub(r'[\"\']', '', image) for image in images])))
