@@ -13,11 +13,14 @@ const InstrumentationMiddleware = (handler: NextApiHandler): NextApiHandler => {
   return async (request, response) => {
     const {method, url = ''} = request;
     const [target] = url.split('?');
-
+    
     const span = trace.getSpan(context.active()) as Span;
+    const traceId = span.spanContext().traceId;
 
     let httpStatus = 200;
     try {
+      response.setHeader('X-Trace-Id', traceId);
+      response.setHeader('X-Hello-From', 'InstrumentationMiddleware');
       await runWithSpan(span, async () => handler(request, response));
       httpStatus = response.statusCode;
     } catch (error) {
@@ -28,6 +31,7 @@ const InstrumentationMiddleware = (handler: NextApiHandler): NextApiHandler => {
     } finally {
       requestCounter.add(1, { method, target, status: httpStatus });
       span.setAttribute(SemanticAttributes.HTTP_STATUS_CODE, httpStatus);
+      console.log(`[InstrumentationMiddleware] ${method} ${target} ${httpStatus}`);
     }
   };
 };
