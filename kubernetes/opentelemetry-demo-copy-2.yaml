@@ -9576,27 +9576,27 @@ spec:
     opentelemetry.io/name: kafka
 ---
 # Source: opentelemetry-demo/templates/component.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: load-generator
-  labels:
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: load-generator
+#   labels:
     
-    opentelemetry.io/name: load-generator
-    app.kubernetes.io/instance: opentelemetry-demo
-    app.kubernetes.io/component: load-generator
-    app.kubernetes.io/name: load-generator
-    app.kubernetes.io/version: "2.0.0"
-    app.kubernetes.io/part-of: opentelemetry-demo
-spec:
-  type: ClusterIP
-  ports:
-    - port: 8089
-      name: tcp-service
-      targetPort: 8089
-  selector:
+#     opentelemetry.io/name: load-generator
+#     app.kubernetes.io/instance: opentelemetry-demo
+#     app.kubernetes.io/component: load-generator
+#     app.kubernetes.io/name: load-generator
+#     app.kubernetes.io/version: "2.0.0"
+#     app.kubernetes.io/part-of: opentelemetry-demo
+# spec:
+#   type: ClusterIP
+#   ports:
+#     - port: 8089
+#       name: tcp-service
+#       targetPort: 8089
+#   selector:
     
-    opentelemetry.io/name: load-generator
+#     opentelemetry.io/name: load-generator
 ---
 # Source: opentelemetry-demo/templates/component.yaml
 apiVersion: v1
@@ -10376,6 +10376,7 @@ spec:
           - until nc -z -v -w30 valkey-cart 6379; do echo waiting for valkey-cart; sleep 2;
             done;
           image: busybox:latest
+          imagePullPolicy: Never
           name: wait-for-valkey-cart
       volumes:
 ---
@@ -10461,6 +10462,7 @@ spec:
           - -c
           - until nc -z -v -w30 kafka 9092; do echo waiting for kafka; sleep 2; done;
           image: busybox:latest
+          imagePullPolicy: Never
           name: wait-for-kafka
       volumes:
 ---
@@ -10689,7 +10691,8 @@ spec:
           - sh
           - -c
           - cp /config-ro/demo.flagd.json /config-rw/demo.flagd.json && cat /config-rw/demo.flagd.json
-          image: busybox
+          image: busybox:latest
+          imagePullPolicy: Never
           name: init-config
           volumeMounts:
           - mountPath: /config-ro
@@ -10767,6 +10770,7 @@ spec:
           - -c
           - until nc -z -v -w30 kafka 9092; do echo waiting for kafka; sleep 2; done;
           image: busybox:latest
+          imagePullPolicy: Never
           name: wait-for-kafka
       volumes:
 ---
@@ -10802,7 +10806,7 @@ spec:
       serviceAccountName: opentelemetry-demo
       containers:
         - name: frontend
-          image: 'ghcr.io/open-telemetry/demo:2.0.0-frontend'
+          image: 'ghcr.io/open-telemetry/demo:xz-modified-3-frontend'
           imagePullPolicy: IfNotPresent
           ports:
             
@@ -11087,84 +11091,84 @@ spec:
       volumes:
 ---
 # Source: opentelemetry-demo/templates/component.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: load-generator
-  labels:
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: load-generator
+#   labels:
     
-    opentelemetry.io/name: load-generator
-    app.kubernetes.io/instance: opentelemetry-demo
-    app.kubernetes.io/component: load-generator
-    app.kubernetes.io/name: load-generator
-    app.kubernetes.io/version: "2.0.0"
-    app.kubernetes.io/part-of: opentelemetry-demo
-spec:
-  replicas: 1
-  revisionHistoryLimit: 10
-  selector:
-    matchLabels:
+#     opentelemetry.io/name: load-generator
+#     app.kubernetes.io/instance: opentelemetry-demo
+#     app.kubernetes.io/component: load-generator
+#     app.kubernetes.io/name: load-generator
+#     app.kubernetes.io/version: "2.0.0"
+#     app.kubernetes.io/part-of: opentelemetry-demo
+# spec:
+#   replicas: 1
+#   revisionHistoryLimit: 10
+#   selector:
+#     matchLabels:
       
-      opentelemetry.io/name: load-generator
-  template:
-    metadata:
-      labels:
+#       opentelemetry.io/name: load-generator
+#   template:
+#     metadata:
+#       labels:
         
-        opentelemetry.io/name: load-generator
-        app.kubernetes.io/instance: opentelemetry-demo
-        app.kubernetes.io/component: load-generator
-        app.kubernetes.io/name: load-generator
-    spec:
-      serviceAccountName: opentelemetry-demo
-      containers:
-        - name: load-generator
-          image: 'ghcr.io/open-telemetry/demo:2.0.0-load-generator'
-          imagePullPolicy: IfNotPresent
-          ports:
+#         opentelemetry.io/name: load-generator
+#         app.kubernetes.io/instance: opentelemetry-demo
+#         app.kubernetes.io/component: load-generator
+#         app.kubernetes.io/name: load-generator
+#     spec:
+#       serviceAccountName: opentelemetry-demo
+#       containers:
+#         - name: load-generator
+#           image: 'ghcr.io/open-telemetry/demo:2.0.0-load-generator'
+#           imagePullPolicy: IfNotPresent
+#           ports:
             
-            - containerPort: 8089
-              name: service
-          env:
-            - name: OTEL_SERVICE_NAME
-              valueFrom:
-                fieldRef:
-                  apiVersion: v1
-                  fieldPath: metadata.labels['app.kubernetes.io/component']
-            - name: OTEL_COLLECTOR_NAME
-              value: otel-collector
-            - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-              value: cumulative
-            - name: LOCUST_WEB_HOST
-              value: 0.0.0.0
-            - name: LOCUST_WEB_PORT
-              value: "8089"
-            - name: LOCUST_USERS
-              value: "10"
-            - name: LOCUST_SPAWN_RATE
-              value: "1"
-            - name: LOCUST_HOST
-              value: http://frontend-proxy:8080
-            - name: LOCUST_HEADLESS
-              value: "false"
-            - name: LOCUST_AUTOSTART
-              value: "true"
-            - name: LOCUST_BROWSER_TRAFFIC_ENABLED
-              value: "true"
-            - name: PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION
-              value: python
-            - name: FLAGD_HOST
-              value: flagd
-            - name: FLAGD_PORT
-              value: "8013"
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: http://$(OTEL_COLLECTOR_NAME):4317
-            - name: OTEL_RESOURCE_ATTRIBUTES
-              value: service.name=$(OTEL_SERVICE_NAME),service.namespace=opentelemetry-demo,service.version=2.0.0
-          resources:
-            limits:
-              memory: 2500Mi
-          volumeMounts:
-      volumes:
+#             - containerPort: 8089
+#               name: service
+#           env:
+#             - name: OTEL_SERVICE_NAME
+#               valueFrom:
+#                 fieldRef:
+#                   apiVersion: v1
+#                   fieldPath: metadata.labels['app.kubernetes.io/component']
+#             - name: OTEL_COLLECTOR_NAME
+#               value: otel-collector
+#             - name: OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+#               value: cumulative
+#             - name: LOCUST_WEB_HOST
+#               value: 0.0.0.0
+#             - name: LOCUST_WEB_PORT
+#               value: "8089"
+#             - name: LOCUST_USERS
+#               value: "10"
+#             - name: LOCUST_SPAWN_RATE
+#               value: "1"
+#             - name: LOCUST_HOST
+#               value: http://frontend-proxy:8080
+#             - name: LOCUST_HEADLESS
+#               value: "false"
+#             - name: LOCUST_AUTOSTART
+#               value: "true"
+#             - name: LOCUST_BROWSER_TRAFFIC_ENABLED
+#               value: "true"
+#             - name: PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION
+#               value: python
+#             - name: FLAGD_HOST
+#               value: flagd
+#             - name: FLAGD_PORT
+#               value: "8013"
+#             - name: OTEL_EXPORTER_OTLP_ENDPOINT
+#               value: http://$(OTEL_COLLECTOR_NAME):4317
+#             - name: OTEL_RESOURCE_ATTRIBUTES
+#               value: service.name=$(OTEL_SERVICE_NAME),service.namespace=opentelemetry-demo,service.version=2.0.0
+#           resources:
+#             limits:
+#               memory: 2500Mi
+#           volumeMounts:
+#       volumes:
 ---
 # Source: opentelemetry-demo/templates/component.yaml
 apiVersion: apps/v1
